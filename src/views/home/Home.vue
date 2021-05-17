@@ -1,7 +1,12 @@
 <template>
   <div id="home">
       <nav-bar class="home-nav"><div slot='center'>购物街</div></nav-bar>
-      <better-scroll class="content" ref="scroll" :probe-type="3" @scroll="scrollBackTop">
+      <better-scroll class="content" 
+                     ref="scroll" 
+                     :probe-type="3" 
+                     @scroll="scrollBackTop"
+                     :pullUpLoad="true"
+                     @pullingUp="loadmore">
         <home-swiper :banners="banners"/>
         <recommend-show :recommends="recommends"/>
         <popular-show/>
@@ -47,8 +52,6 @@ export default {
       HomeSwiper,
       RecommendShow,
       PopularShow,
-       
-        
     },
     data(){
       return{
@@ -71,6 +74,11 @@ export default {
         this.getHomeGoods('new')
         this.getHomeGoods('sell')
       },
+      mounted(){
+        this.$bus.$on('imageLoad',()=>{
+          this.$refs.scroll.refresh()
+        })
+      },
     methods:{
       //监听事件方法
       tabClick(index){
@@ -92,9 +100,12 @@ export default {
         this.$refs.scroll.backTop()
       },
       scrollBackTop(position){
-        // console.log(position);
         //当滚动的y>1000时 v-show为true 显示出回顶部按钮
         this.isShowBackTop=(-position.y)>1000
+      },
+      //上拉加载更多
+      loadmore(){
+        this.getHomeGoods(this.currentType)
       },
       //网络请求相关的方法
       getHomeMultidata(){
@@ -106,7 +117,6 @@ export default {
       getHomeGoods(type){
          const page=this.goods[type].page+1
         getHomeGoods(type,page).then(res=>{
-          // console.log(res);
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page+=1
         })
