@@ -30,13 +30,17 @@ export default {
     methods:{
         //回到顶部 调用scroll.scrollTO(x,y,time)
         backTop(){
-            // this.scroll && this.scroll.scrollTo(0,0,500)
-            this.scroll.scrollTo(0,0,500)
+            this.scroll && this.scroll.scrollTo(0,0,500)
+            // this.scroll.scrollTo(0,0,500)
         },
         //刷新
         refresh(){
-            // this.scroll && this.scroll.refresh()
-            this.scroll.refresh()
+            this.scroll && this.scroll.refresh()
+            // this.scroll.refresh()
+        },
+        getScrollY(){
+            // console.log(this.scroll.y);
+            return this.scroll ? this.scroll.y : 0
         }
     },
     //生命周期函数
@@ -52,6 +56,7 @@ export default {
         })
         this.scroll.on('scroll',(position)=>{
             this.$emit('scroll',position)
+            // console.log(position);
         })
         this.scroll.on('pullingUp',()=>{
             this.$emit('pullingUp')
