@@ -38,6 +38,9 @@ export default {
             this.scroll && this.scroll.refresh()
             // this.scroll.refresh()
         },
+        finishPullUp() {
+        this.scroll && this.scroll.finishPullUp()
+        },
         getScrollY(){
             // console.log(this.scroll.y);
             return this.scroll ? this.scroll.y : 0
@@ -54,14 +57,19 @@ export default {
         probeType:this.probeType,
         pullUpLoad: this.pullUpLoad
         })
+
+        if (this.probeType === 2 || this.probeType === 3) {
         this.scroll.on('scroll',(position)=>{
             this.$emit('scroll',position)
             // console.log(position);
         })
+        }
+        if (this.pullUpLoad) {
         this.scroll.on('pullingUp',()=>{
             this.$emit('pullingUp')
-            this.scroll.finishPullUp()
+            this.finishPullUp()
         })
+        }
     }
 }
 </script>

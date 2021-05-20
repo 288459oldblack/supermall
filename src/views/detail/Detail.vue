@@ -7,136 +7,45 @@
             <detail-swiper :topImage="topImages"/>
             <detail-base-info :goods="goods"/>
             <detail-shop-info :shop="shop"/>
-            <detail-goods-image-info :detailImage="detailImage"/>
-            <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
+            <detail-goods-info :detailInfo="detailInfo" @imageLoad="imageLoad1"/>
+            <detail-param-info :paramInfo="paramInfo"></detail-param-info>
+            <detail-comment-info :commentInfo="commentInfo"></detail-comment-info>
+            <goods-list :goods="recommendInfo"></goods-list>
         </better-scroll>
     </div>
 </template>
 
 <script>
 import BetterScroll from 'components/common/betterScroll/BetterScroll.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
 
 import DetailNavBar from './childComps/DetailNavBar.vue'
 import DetailSwiper from './childComps/DetailSwiper.vue'
 import DetailBaseInfo from './childComps/DetailBaseInfo.vue'
 import DetailShopInfo from './childComps/DetailShopInfo.vue'
-import DetailGoodsImageInfo from './childComps/DetailGoodsImageInfo.vue'
+import DetailGoodsInfo from './childComps/DetailGoodsInfo.vue'
+import DetailParamInfo from './childComps/DetailParamInfo.vue'
+import DetailCommentInfo from './childComps/DetailCommentInfo.vue'
 
 //网络请求,请求数据
-import {getDetail,Goods,Shop} from 'network/detail.js'
+import {getDetail,getRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
+
 
 
 export default {
     name:'Detail',
     components: { 
         BetterScroll,
+        GoodsList,
+
         DetailNavBar, 
         DetailSwiper,
         DetailBaseInfo,
         DetailShopInfo,
-        DetailGoodsImageInfo,
-         
+        DetailGoodsInfo,
+        DetailParamInfo,
+        DetailCommentInfo,
+       
         },
     data(){
         return{
@@ -144,8 +53,10 @@ export default {
             topImages:[],
             goods: {},
             shop:{},
-            detailImage:[]
-
+            detailInfo:{},
+            paramInfo:{},
+            commentInfo:{},
+            recommendInfo:[]
         }
     },
     created(){
@@ -162,11 +73,26 @@ export default {
             this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
             //3.获取商家信息
             this.shop=new Shop(data.shopInfo)
-            //4.获取商品介绍图片
-            console.log(data.detailInfo.detailImage[0].list);
-            this.detailImage=data.detailInfo.detailImage[0].list
-
+            //4.获取商品介绍图片等信息
+            this.detailInfo = data.detailInfo
+            // 5.获取参数的信息
+            this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+            //6.取出商品信息
+            if(data.rate.cRate!==0){
+                this.commentInfo=data.rate.list[0]
+                console.log(this.commentInfo);
+            }
+            
         })
+        //得到推荐商品信息
+        getRecommend().then(res=>{
+            this.recommendInfo=res.data.list
+        })
+    },
+    methods:{
+        imageLoad1(){
+            this.$refs.scroll.refresh()
+        }
     }
 
 }
