@@ -7,7 +7,7 @@
           <div slot="center" class="center">
             <div v-for="(item,index) in title" 
                  :key="index" 
-                 class="title"
+                 class="title-item"
                  @click="itemClick(index)"
                  :class="{active:index===currentIndex}">
                 {{item}}
@@ -23,37 +23,47 @@ import NavBar from 'components/common/navbar/NavBar.vue'
 
 export default {
     name:'DetailNavBar',
-    data(){
-        return{
-            title:['商品','参数','评论','推荐'],
-            currentIndex:0
+    props:{
+        title:{
+            type:Array,
+            default:()=>{
+                return ['商品','参数','评论','推荐']
+            }
+        },
+        currentIndex:{
+            type:Number,
+            default:0
         }
     },
     components: { NavBar },
     methods:{
         itemClick(index){
-            this.currentIndex=index
+            this.$emit('itemClick', index)
         },
         backClick(){
-            // this.$router.go(-1)
-            this.$router.back()
+            this.$router.go(-1)
+            // this.$router.back()
         }
     }
 }
 </script>
 
 <style>
+.detail-navbar {
+    background-color: #fff;
+    font-weight: normal;
+  }
 .center{
     display: flex;
     font-size: 13px;
 }
-.title{
+.title-item{
     flex: 1;
 }
 .left{
     margin-top: 3px;
 }
-.active{
-    color: red;
+.title-item.active{
+    color: var(--color-high-text);
 }
 </style>

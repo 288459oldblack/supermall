@@ -31,7 +31,9 @@ export default {
         //回到顶部 调用scroll.scrollTO(x,y,time)
         backTop(){
             this.scroll && this.scroll.scrollTo(0,0,500)
-            // this.scroll.scrollTo(0,0,500)
+        },
+        scrollTo(x,y,time){
+            this.scroll && this.scroll.scrollTo(x,y,time)
         },
         //刷新
         refresh(){
@@ -39,7 +41,7 @@ export default {
             // this.scroll.refresh()
         },
         finishPullUp() {
-        this.scroll && this.scroll.finishPullUp()
+            this.scroll && this.scroll.finishPullUp()
         },
         getScrollY(){
             // console.log(this.scroll.y);

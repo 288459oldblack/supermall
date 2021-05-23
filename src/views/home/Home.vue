@@ -71,6 +71,7 @@ export default {
           'sell':{page:0,list:[]}
         },
         currentType:'pop',
+        currentIndex:0,
         isShowBackTop:false,
         isShowTabControl:false,
         offsetTop:0,
@@ -115,6 +116,9 @@ export default {
             this.currentType='sell'
             break;
         }
+        //让两个index保持一致
+        this.$refs.tabcontrol1.currentIndex=index
+        this.$refs.tabcontrol2.currentIndex=index
       },
       //回到顶部监听事件  监听组件@click.native=""
       backTopClick(){
@@ -124,7 +128,7 @@ export default {
       //监听BetterScroll组件发出的scroll方法,通过位置判断是否显示backtop按钮
       scrollBackTop(position){
         //当滚动的y>1000时 v-show为true 显示出回顶部按钮
-        this.isShowBackTop=(-position.y)>1000
+        this.isShowBackTop=(-position.y)>1200
         this.isShowTabControl=(-position.y)>this.offsetTop
       },
       //上拉加载更多

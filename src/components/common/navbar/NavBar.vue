@@ -1,5 +1,5 @@
 <template>
-<div class="nav-bar">
+<div id="nav-bar">
   <div class="left"><slot name="left"></slot></div>
   <div class="center"><slot name="center"></slot></div>
   <div class="right"><slot name="right"></slot></div>
@@ -13,7 +13,9 @@ export default {
 </script>
 
 <style>
-    .nav-bar{
+    #nav-bar{
+        /* position: relative;
+        z-index: 10; */
         display: flex;
         height: 44px;
         line-height: 44px;
@@ -26,6 +28,7 @@ export default {
     }
     .center{
         flex: 1;
+        text-align: center;
         /* background-color: #0f0; */
     }
 </style>
