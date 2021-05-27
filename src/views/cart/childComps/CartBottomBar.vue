@@ -1,7 +1,7 @@
 <template>
   <div class="cart-bottom">
     <div class="cart-bottom-left">
-      <check-button class="check-button"></check-button>
+      <check-button class="check-button" v-model="isSelectAll" @click.native="checkClick"></check-button>
       <span>全选</span>
     </div>
     <div class="cart-bottom-center">合计:{{ totalPrice }}</div>
@@ -30,8 +30,27 @@ export default {
         }, 0)
         .toFixed(2);
     },
+    isSelectAll(){
+        return this.$store.getters.cartList.find(item => item.checked === false) === undefined;
+    }
   },
-};
+  methods:{
+    checkClick(){
+        // 1.判断是否有未选中的按钮
+        let isSelectAll = this.$store.getters.cartList.find(item => item.checked);
+
+        if (isSelectAll) {
+          this.$store.state.cartList.forEach(item => {
+            item.checked = false; 
+          });
+        } else {//2.有未选中的内容, 则全部选中
+          this.$store.state.cartList.forEach(item => {
+            item.checked = true;
+          });
+        }
+    }
+  }
+}
 </script>
 
 <style>

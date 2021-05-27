@@ -19,6 +19,7 @@
         </better-scroll>
         <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
         <back-top @click.native="backTopClick" v-show="isShow"></back-top>
+        <toast></toast>
     </div>
 </template>
 
@@ -26,6 +27,7 @@
 import BetterScroll from 'components/common/betterScroll/BetterScroll.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/backTop.vue'
+import Toast from "components/common/toast/Toast.vue";
 
 import DetailNavBar from './childComps/DetailNavBar.vue'
 import DetailSwiper from './childComps/DetailSwiper.vue'
@@ -40,12 +42,14 @@ import DetailBottomBar from './childComps/DetailBottomBar.vue'
 import {getDetail,getRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
 
 
+
 export default {
     name:'Detail',
     components: { 
         BetterScroll,
         GoodsList,
         BackTop,
+        Toast,
 
         DetailNavBar, 
         DetailSwiper,
@@ -168,6 +172,14 @@ export default {
             // console.log(produce);
             // 3.添加到Store中
             this.$store.commit('addCart', produce)
+            this.$store
+        .dispatch("ChangeCart", produce)
+        .then(() => {
+          this.$toast.show("加入购物车");
+        })
+        .catch(() => {
+          this.$toast.show("购买数量+1");
+        });
         }
         // _getOffsetTops(){
         //     this.distanceTop=[]
